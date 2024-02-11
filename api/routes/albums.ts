@@ -1,6 +1,6 @@
 import express from 'express';
 import {imagesUpload} from '../multer';
-import mongoose from 'mongoose';
+import mongoose, {Types} from 'mongoose';
 import Album from '../models/Album';
 import {AlbumMutation} from '../types';
 
@@ -44,5 +44,25 @@ albumsRouter.get('/', async (req, res, next) => {
   }
 });
 
+albumsRouter.get('/:id', async (req, res, next) => {
+  try {
+    let _id: Types.ObjectId;
+    try {
+      _id = new Types.ObjectId(req.params.id);
+    } catch {
+      return res.status(404).send({error: 'Wrong ObjectId!'});
+    }
+
+    const album = await Album.findById(_id);
+
+    if (!album) {
+      return res.status(404).send({error: 'Not found!'});
+    }
+
+    res.send(album);
+  } catch (e) {
+    next(e);
+  }
+});
 
 export default albumsRouter;
