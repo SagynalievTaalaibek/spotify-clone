@@ -33,8 +33,12 @@ albumsRouter.get('/', async (req, res, next) => {
     const query = req.query.artist;
 
     if (query) {
-      const albumsByArist = await Album.find({artist: query});
-      return res.send(albumsByArist);
+      try {
+        const albumsByArist = await Album.find({artist: query});
+        return res.send(albumsByArist);
+      } catch (e) {
+        return res.status(404).send({message: 'Wrong object id'});
+      }
     }
 
     const albums = await Album.find().populate('artist');

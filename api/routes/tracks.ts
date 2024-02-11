@@ -21,7 +21,27 @@ tracksRouter.post('/', async (req, res, next) => {
     if (e instanceof mongoose.Error.ValidationError) {
       return res.status(422).send(e);
     }
+    next(e);
+  }
+});
 
+
+tracksRouter.get('/', async (req, res, next) => {
+  try {
+    const query = req.query.album;
+
+    if (query) {
+      try {
+        const trackByAlbum = await Track.find({album: query});
+        return res.send(trackByAlbum);
+      } catch (e) {
+        return res.status(404).send({message: 'Wrong object id'});
+      }
+    }
+
+    const tracks = await Track.find().populate('album');
+    return res.send(tracks);
+  } catch (e) {
     next(e);
   }
 });
