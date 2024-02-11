@@ -10,3 +10,9 @@ export interface ArtistMutation {
   photo: string | null;
   information: string;
 }
+
+export interface TrackMutation {
+  name: string;
+  album: string;
+  duration: string;
+}
