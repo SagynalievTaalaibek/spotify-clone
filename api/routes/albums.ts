@@ -28,4 +28,21 @@ albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
   }
 });
 
+albumsRouter.get('/', async (req, res, next) => {
+  try {
+    const query = req.query.artist;
+
+    if (query) {
+      const albumsByArist = await Album.find({artist: query});
+      return res.send(albumsByArist);
+    }
+
+    const albums = await Album.find().populate('artist');
+    return res.send(albums);
+  } catch (e) {
+    next(e);
+  }
+});
+
+
 export default albumsRouter;
