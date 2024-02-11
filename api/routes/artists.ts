@@ -2,12 +2,13 @@ import express from 'express';
 import {imagesUpload} from '../multer';
 import Artist from '../models/Artist';
 import mongoose from 'mongoose';
+import {ArtistMutation} from '../types';
 
 const artistsRouter = express.Router();
 
 artistsRouter.post('/', imagesUpload.single('photo'), async (req, res, next) => {
   try {
-    const artistData = {
+    const artistData: ArtistMutation = {
       name: req.body.name,
       photo: req.file ? req.file.filename : null,
       information: req.body.information,
