@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/User';
 import {TrackHistoryMutation} from '../types';
 import TrackHistory from '../models/TrackHistory';
+import mongoose from 'mongoose';
 
 const trackHistoriesRouter = express.Router();
 
@@ -39,6 +40,9 @@ trackHistoriesRouter.post('/', async (req, res, next) => {
 
     res.send(trackHistory);
   } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return res.status(422).send(e);
+    }
     next(e);
   }
 });
