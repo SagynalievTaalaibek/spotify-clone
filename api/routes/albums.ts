@@ -3,6 +3,7 @@ import {imagesUpload} from '../multer';
 import mongoose, {Types} from 'mongoose';
 import Album from '../models/Album';
 import {AlbumMutation} from '../types';
+import { loadavg } from 'node:os';
 
 const albumsRouter = express.Router();
 

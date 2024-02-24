@@ -19,6 +19,10 @@ const TrackSchema = new Schema({
     }
   },
   duration: String,
+  albumTrackNumber: {
+    type: Number,
+    required: true,
+  }
 });
 
 const Track = model('Track', TrackSchema);

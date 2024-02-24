@@ -1,8 +1,8 @@
 import express from 'express';
-import {AlbumInterface, TrackMutation} from '../types';
+import mongoose from 'mongoose';
 import Track from '../models/Track';
-import mongoose, {Types} from 'mongoose';
 import Album from '../models/Album';
+import { AlbumInterface, TrackMutation } from '../types';
 
 const tracksRouter = express.Router();
 
@@ -12,6 +12,7 @@ tracksRouter.post('/', async (req, res, next) => {
       name: req.body.name,
       album: req.body.album,
       duration: req.body.duration,
+      albumTrackNumber: req.body.albumTrackNumber,
     };
 
     const track = new Track(trackData);
@@ -29,14 +30,32 @@ tracksRouter.post('/', async (req, res, next) => {
 
 tracksRouter.get('/', async (req, res, next) => {
   try {
-    const query = req.query.album;
+    const queryAlbum = req.query.album;
+    const queryArtistId = req.query.artist;
 
-    if (query) {
+    if (queryAlbum) {
       try {
-        const trackByAlbum = await Track.find({album: query});
+        const trackByAlbum = await Track.find({ album: queryAlbum });
         return res.send(trackByAlbum);
       } catch (e) {
-        return res.status(404).send({message: 'Wrong object id'});
+        return res.status(404).send({ message: 'Wrong object id' });
+      }
+    }
+
+    if (queryArtistId) {
+      try {
+        const albums: AlbumInterface[] = await Album.find({ artist: queryArtistId });
+        const albumsId = albums.map(album => album._id);
+
+        const tractsArtist = await Promise.all(albumsId.map(async (id) => {
+          return Track.find({ album: id });
+        }));
+
+        const allTracks = tractsArtist.flat();
+
+        return res.send(allTracks);
+      } catch (e) {
+        return res.status(404).send({ message: 'Wrong object id' });
       }
     }
 
@@ -46,30 +65,5 @@ tracksRouter.get('/', async (req, res, next) => {
     next(e);
   }
 });
-
-tracksRouter.get('/:id', async (req, res, next) => {
-  try {
-    let artist: Types.ObjectId;
-    try {
-      artist = new Types.ObjectId(req.params.id);
-    } catch {
-      return res.status(404).send({error: 'Wrong ObjectId!'});
-    }
-
-    const albums: AlbumInterface[] = await Album.find({ artist });
-    const albumsId = albums.map(album => album._id);
-
-    const tractsArtist = await Promise.all(albumsId.map(async (id) => {
-      return Track.find({album: id});
-    }));
-
-    const allTracks = tractsArtist.flat();
-
-    return res.send(allTracks);
-  } catch (e) {
-    next(e);
-  }
-});
-
 
 export default tracksRouter;
