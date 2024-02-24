@@ -1,9 +1,8 @@
 import express from 'express';
-import {imagesUpload} from '../multer';
-import mongoose, {Types} from 'mongoose';
+import { imagesUpload } from '../multer';
+import mongoose, { Types } from 'mongoose';
 import Album from '../models/Album';
-import {AlbumMutation} from '../types';
-import { loadavg } from 'node:os';
+import { AlbumMutation } from '../types';
 
 const albumsRouter = express.Router();
 
