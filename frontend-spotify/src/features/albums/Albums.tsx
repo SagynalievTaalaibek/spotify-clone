@@ -15,7 +15,7 @@ const Albums = () => {
 
   useEffect(() => {
     dispatch(fetchAlbumsByArtist(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   return (
     <>

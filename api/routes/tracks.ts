@@ -35,7 +35,7 @@ tracksRouter.get('/', async (req, res, next) => {
 
     if (queryAlbum) {
       try {
-        const trackByAlbum = await Track.find({ album: queryAlbum });
+        const trackByAlbum = await Track.find({ album: queryAlbum }).sort({albumTrackNumber: 1});
         return res.send(trackByAlbum);
       } catch (e) {
         return res.status(404).send({ message: 'Wrong object id' });

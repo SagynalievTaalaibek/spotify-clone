@@ -40,7 +40,7 @@ const AlbumCard: React.FC<Props> = ({ id, name, image, yearOfIssue }) => {
         <CardContent>
           <Grid container>
             <Grid item xs={10}>
-              <Typography variant="h5">Name of Album{name}</Typography>
+              <Typography variant="h5">Album: {name}</Typography>
               <Typography variant="h6">Year of issue {yearOfIssue}</Typography>
             </Grid>
           </Grid>

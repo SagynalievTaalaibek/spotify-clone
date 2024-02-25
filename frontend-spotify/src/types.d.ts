@@ -13,6 +13,10 @@ export interface AlbumsI {
   image: string;
 }
 
-export interface Count {
-  count: number;
+export interface TrackI {
+  _id: string;
+  name: string;
+  album: string;
+  duration: string;
+  albumTrackNumber: string;
 }
