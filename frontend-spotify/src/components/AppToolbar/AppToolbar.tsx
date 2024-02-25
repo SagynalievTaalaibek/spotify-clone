@@ -11,10 +11,14 @@ const Link = styled(NavLink)({
 
 const AppToolbar = () => {
   return (
-    <AppBar position="sticky" sx={{ mb: 2 }}>
+    <AppBar position="sticky" sx={{ mb: 2, backgroundColor: '#1DB954' }}>
       <Toolbar>
         <Grid container justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, fontWeight: 'bold' }}
+          >
             <Link to="/">Spotify</Link>
           </Typography>
         </Grid>

@@ -34,7 +34,7 @@ albumsRouter.get('/', async (req, res, next) => {
 
     if (query) {
       try {
-        const albumsByArist = await Album.find({artist: query});
+        const albumsByArist = await Album.find({artist: query}).populate('artist').sort({yearOfIssue: -1});
         return res.send(albumsByArist);
       } catch (e) {
         return res.status(404).send({message: 'Wrong object id'});
