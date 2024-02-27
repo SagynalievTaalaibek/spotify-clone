@@ -4,6 +4,7 @@ import AppToolbar from './components/AppToolbar/AppToolbar';
 import Artists from './features/artists/Artists';
 import Albums from './features/albums/Albums';
 import Track from './features/tracks/Track';
+import Register from './features/users/Register';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="/" element={<Artists />} />
             <Route path="/albums/:id" element={<Albums />} />
             <Route path="/tracks/:id" element={<Track />} />
+            <Route path="/register" element={<Register />} />
             <Route path="*" element={<h1>Not found</h1>} />
           </Routes>
         </Container>
