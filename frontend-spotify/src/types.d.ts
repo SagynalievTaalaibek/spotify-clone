@@ -68,3 +68,21 @@ export interface TrackHistoryMutation {
   token: string;
   track: string;
 }
+
+export interface TrackHistoryData {
+  _id: string;
+  user: string;
+  track: {
+    _id: string;
+    name: string;
+    album: {
+      _id: string;
+      name: string;
+      artist: {
+        _id: string;
+        name: string;
+      };
+    };
+  };
+  datetime: string;
+}

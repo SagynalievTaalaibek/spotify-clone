@@ -9,7 +9,7 @@ import { selectCreateTrackHistoryLoading } from '../../trackHistory/trackHistory
 interface Props {
   idTrack: string;
   name: string;
-  user: UserI;
+  user: UserI | null;
   duration: string;
   albumTrackNumber: string;
 }
@@ -25,7 +25,9 @@ const TrackTable: React.FC<Props> = ({
   const trackHistoryLoading = useAppSelector(selectCreateTrackHistoryLoading);
 
   const playMusic = async () => {
-    await dispatch(createTrackHistory({ track: idTrack, token: user.token }));
+    if (user) {
+      await dispatch(createTrackHistory({ track: idTrack, token: user.token }));
+    }
   };
 
   return (

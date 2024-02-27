@@ -30,11 +30,11 @@ trackHistoriesRouter.get('/', auth, async (req: RequestWithUser, res, next) => {
   try {
     const trackHistoryData = await TrackHistory.find({ user: req.user?._id }).populate({
       path: 'track',
-      select: 'name, album',
+      select: 'name album',
       populate: {
         path: 'album',
         model: 'Album',
-        select: 'name, artist',
+        select: 'name artist',
         populate: {
           path: 'artist',
           model: 'Artist',
