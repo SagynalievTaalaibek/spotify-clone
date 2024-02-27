@@ -1,41 +1,20 @@
 import express from 'express';
-import User from '../models/User';
-import {TrackHistoryMutation} from '../types';
 import TrackHistory from '../models/TrackHistory';
 import mongoose from 'mongoose';
+import auth, { RequestWithUser } from '../middleware/auth';
 
 const trackHistoriesRouter = express.Router();
 
-trackHistoriesRouter.post('/', async (req, res, next) => {
+trackHistoriesRouter.post('/', auth, async (req: RequestWithUser, res, next) => {
   try {
     const now = new Date();
     const datetime = now.toISOString().toString();
 
-    const headerValue = req.get('Authorization');
-
-    if (!headerValue) {
-      return res.status(401).send({error: 'No Authorization header present'});
-    }
-
-    const [_bearer, token] = headerValue.split(' ');
-
-    if (!token) {
-      return res.status(401).send({error: 'No token present'});
-    }
-
-    const user = await User.findOne({token});
-
-    if (!user) {
-      return res.status(401).send({error: 'Wrong token!'});
-    }
-
-    const trackHistoryData: TrackHistoryMutation = {
-      user: user._id,
+    const trackHistory = new TrackHistory({
+      user: req.user?._id,
       track: req.body.track,
       datetime,
-    }
-
-    const trackHistory = new TrackHistory(trackHistoryData);
+    });
     await trackHistory.save();
 
     res.send(trackHistory);
@@ -47,4 +26,26 @@ trackHistoriesRouter.post('/', async (req, res, next) => {
   }
 });
 
+trackHistoriesRouter.get('/', auth, async (req: RequestWithUser, res, next) => {
+  try {
+    const trackHistoryData = await TrackHistory.find({ user: req.user?._id }).populate({
+      path: 'track',
+      select: 'name, album',
+      populate: {
+        path: 'album',
+        model: 'Album',
+        select: 'name, artist',
+        populate: {
+          path: 'artist',
+          model: 'Artist',
+          select: 'name',
+        },
+      },
+    }).sort({datetime: -1});
+
+    return res.send(trackHistoryData);
+  } catch (e) {
+    next(e);
+  }
+});
 export default trackHistoriesRouter;

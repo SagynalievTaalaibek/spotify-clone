@@ -41,8 +41,3 @@ interface UserMethods {
 
 type UserModel = Model<UserFields, {}, UserMethods>
 
-export interface TrackHistoryMutation {
-  user: Types.ObjectId;
-  track: string;
-  datetime: string;
-}
