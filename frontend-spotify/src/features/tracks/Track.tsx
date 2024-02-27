@@ -7,17 +7,24 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectTrackFetchLoading, selectTracks } from './trackSlice';
 import TrackTable from './components/TrackTable';
 import { useEffect } from 'react';
 import { fetchTracks } from './trackThunks';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const Track = () => {
   const { id } = useParams() as { id: string };
   const dispatch = useAppDispatch();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const artist = searchParams.get('artist');
+  const album = searchParams.get('album');
+
   const trackData = useAppSelector(selectTracks);
   const trackFetchLoading = useAppSelector(selectTrackFetchLoading);
 
@@ -27,6 +34,8 @@ const Track = () => {
 
   return (
     <>
+      <Typography variant="h5">Artist: {artist && artist}</Typography>
+      <Typography variant="h5">Album: {album && album}</Typography>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

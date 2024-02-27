@@ -17,6 +17,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 interface Props {
   id: string;
   name: string;
+  artistName: string;
   image: string;
   yearOfIssue: number;
 }
@@ -26,7 +27,13 @@ const ImageCardMedia = styled(CardMedia)({
   paddingTop: '56.25%',
 });
 
-const AlbumCard: React.FC<Props> = ({ id, name, image, yearOfIssue }) => {
+const AlbumCard: React.FC<Props> = ({
+  id,
+  name,
+  image,
+  yearOfIssue,
+  artistName,
+}) => {
   let cardImage = imageNotAvailable;
 
   if (image) {
@@ -48,7 +55,7 @@ const AlbumCard: React.FC<Props> = ({ id, name, image, yearOfIssue }) => {
         <CardActions sx={{ display: 'flex' }}>
           <IconButton
             component={Link}
-            to={`/tracks/${id}`}
+            to={`/tracks/${id}?artist=${artistName}&album=${name}`}
             sx={{ margin: '0 10px 0 auto' }}
           >
             <ArrowForwardIcon sx={{ fontSize: '30px' }} />

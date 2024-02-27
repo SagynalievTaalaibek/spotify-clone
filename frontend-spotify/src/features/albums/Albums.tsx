@@ -32,6 +32,7 @@ const Albums = () => {
             <AlbumCard
               key={item._id}
               id={item._id}
+              artistName={item.artist.name}
               name={item.name}
               image={item.image}
               yearOfIssue={item.yearOfIssue}
