@@ -15,6 +15,7 @@ import TrackTable from './components/TrackTable';
 import { useEffect } from 'react';
 import { fetchTracks } from './trackThunks';
 import { useLocation, useParams } from 'react-router-dom';
+import { selectUser } from '../users/usersSlice';
 
 const Track = () => {
   const { id } = useParams() as { id: string };
@@ -27,6 +28,7 @@ const Track = () => {
 
   const trackData = useAppSelector(selectTracks);
   const trackFetchLoading = useAppSelector(selectTrackFetchLoading);
+  const userData = useAppSelector(selectUser);
 
   useEffect(() => {
     dispatch(fetchTracks(id));
@@ -43,6 +45,7 @@ const Track = () => {
               <TableCell align="left">Number</TableCell>
               <TableCell align="left">Name</TableCell>
               <TableCell align="left">Duration</TableCell>
+              <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -56,6 +59,7 @@ const Track = () => {
               trackData.map((track) => (
                 <TrackTable
                   key={track._id}
+                  user={userData}
                   name={track.name}
                   duration={track.duration}
                   albumTrackNumber={track.albumTrackNumber}
