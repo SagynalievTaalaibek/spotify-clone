@@ -52,7 +52,7 @@ export interface ValidationError {
 
 export interface RegisterResponse {
   message: string;
-  user: User;
+  user: UserI;
 }
 
 export interface LoginMutation {
@@ -62,4 +62,9 @@ export interface LoginMutation {
 
 export interface GlobalError {
   error: string;
+}
+
+export interface TrackHistoryMutation {
+  token: string;
+  track: string;
 }

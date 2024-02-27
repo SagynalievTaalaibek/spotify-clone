@@ -1,4 +1,5 @@
 import {
+  Alert,
   CircularProgress,
   Paper,
   Table,
@@ -16,6 +17,7 @@ import { useEffect } from 'react';
 import { fetchTracks } from './trackThunks';
 import { useLocation, useParams } from 'react-router-dom';
 import { selectUser } from '../users/usersSlice';
+import { selectCreateTrackHistoryError } from '../trackHistory/trackHistorySlice';
 
 const Track = () => {
   const { id } = useParams() as { id: string };
@@ -29,6 +31,7 @@ const Track = () => {
   const trackData = useAppSelector(selectTracks);
   const trackFetchLoading = useAppSelector(selectTrackFetchLoading);
   const userData = useAppSelector(selectUser);
+  const trackHistoryError = useAppSelector(selectCreateTrackHistoryError);
 
   useEffect(() => {
     dispatch(fetchTracks(id));
@@ -38,6 +41,11 @@ const Track = () => {
     <>
       <Typography variant="h5">Artist: {artist && artist}</Typography>
       <Typography variant="h5">Album: {album && album}</Typography>
+      {trackHistoryError ? (
+        <Alert severity="error">{trackHistoryError.error}</Alert>
+      ) : (
+        ''
+      )}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -45,7 +53,7 @@ const Track = () => {
               <TableCell align="left">Number</TableCell>
               <TableCell align="left">Name</TableCell>
               <TableCell align="left">Duration</TableCell>
-              <TableCell align="left">Action</TableCell>
+              {userData ? <TableCell align="left">Action</TableCell> : ''}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -59,6 +67,7 @@ const Track = () => {
               trackData.map((track) => (
                 <TrackTable
                   key={track._id}
+                  idTrack={track._id}
                   user={userData}
                   name={track.name}
                   duration={track.duration}
