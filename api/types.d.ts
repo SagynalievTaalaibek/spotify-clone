@@ -1,4 +1,4 @@
-import {Model, Types} from 'mongoose';
+import { Model } from 'mongoose';
 
 export interface AlbumMutation {
   name: string;
@@ -39,5 +39,4 @@ interface UserMethods {
   generateToken(): void;
 }
 
-type UserModel = Model<UserFields, {}, UserMethods>
-
+type UserModel = Model<UserFields, unknown, UserMethods>;

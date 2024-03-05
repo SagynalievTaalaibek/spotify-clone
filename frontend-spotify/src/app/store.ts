@@ -17,7 +17,7 @@ import storage from 'redux-persist/lib/storage';
 import { trackHistoryReducer } from '../features/trackHistory/trackHistorySlice';
 
 const usersPersistConfig = {
-  key: 'shop:users',
+  key: 'spotify:users',
   storage: storage,
   whitelist: ['user'],
 };

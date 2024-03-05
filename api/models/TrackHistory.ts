@@ -1,4 +1,4 @@
-import {Schema, model, Types} from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import User from './User';
 import Track from './Track';
 
@@ -11,8 +11,8 @@ const TrackHistorySchema = new Schema({
       validator: async (value: Types.ObjectId) => {
         const user = await User.findById(value);
         return Boolean(user);
-      }
-    }
+      },
+    },
   },
   track: {
     type: Schema.Types.ObjectId,
@@ -22,13 +22,13 @@ const TrackHistorySchema = new Schema({
       validator: async (value: Types.ObjectId) => {
         const track = await Track.findById(value);
         return Boolean(track);
-      }
-    }
+      },
+    },
   },
   datetime: {
     type: Date,
     required: true,
-  }
+  },
 });
 
 const TrackHistory = model('TrackHistory', TrackHistorySchema);

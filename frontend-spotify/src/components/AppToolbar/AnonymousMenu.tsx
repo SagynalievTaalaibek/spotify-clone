@@ -7,6 +7,7 @@ const AnonymousMenu = () => {
       <Grid item>
         <Button
           variant="outlined"
+          color="inherit"
           component={NavLink}
           to="/register"
           sx={{ marginRight: '10px', fontWeight: 'bolder', fontSize: '16px' }}
@@ -16,6 +17,7 @@ const AnonymousMenu = () => {
 
         <Button
           variant="outlined"
+          color="inherit"
           component={NavLink}
           to="/login"
           sx={{ fontWeight: 'bolder', fontSize: '16px' }}

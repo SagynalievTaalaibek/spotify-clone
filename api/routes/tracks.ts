@@ -27,7 +27,6 @@ tracksRouter.post('/', async (req, res, next) => {
   }
 });
 
-
 tracksRouter.get('/', async (req, res, next) => {
   try {
     const queryAlbum = req.query.album;
@@ -35,7 +34,9 @@ tracksRouter.get('/', async (req, res, next) => {
 
     if (queryAlbum) {
       try {
-        const trackByAlbum = await Track.find({ album: queryAlbum }).populate('album').sort({albumTrackNumber: 1});
+        const trackByAlbum = await Track.find({ album: queryAlbum })
+          .populate('album')
+          .sort({ albumTrackNumber: 1 });
         return res.send(trackByAlbum);
       } catch (e) {
         return res.status(404).send({ message: 'Wrong object id' });
@@ -44,12 +45,16 @@ tracksRouter.get('/', async (req, res, next) => {
 
     if (queryArtistId) {
       try {
-        const albums: AlbumInterface[] = await Album.find({ artist: queryArtistId });
-        const albumsId = albums.map(album => album._id);
+        const albums: AlbumInterface[] = await Album.find({
+          artist: queryArtistId,
+        });
+        const albumsId = albums.map((album) => album._id);
 
-        const tractsArtist = await Promise.all(albumsId.map(async (id) => {
-          return Track.find({ album: id });
-        }));
+        const tractsArtist = await Promise.all(
+          albumsId.map(async (id) => {
+            return Track.find({ album: id });
+          }),
+        );
 
         const allTracks = tractsArtist.flat();
 

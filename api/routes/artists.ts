@@ -1,31 +1,35 @@
 import express from 'express';
-import {imagesUpload} from '../multer';
+import { imagesUpload } from '../multer';
 import Artist from '../models/Artist';
 import mongoose from 'mongoose';
-import {ArtistMutation} from '../types';
+import { ArtistMutation } from '../types';
 
 const artistsRouter = express.Router();
 
-artistsRouter.post('/', imagesUpload.single('photo'), async (req, res, next) => {
-  try {
-    const artistData: ArtistMutation = {
-      name: req.body.name,
-      photo: req.file ? req.file.filename : null,
-      information: req.body.information,
-    };
+artistsRouter.post(
+  '/',
+  imagesUpload.single('photo'),
+  async (req, res, next) => {
+    try {
+      const artistData: ArtistMutation = {
+        name: req.body.name,
+        photo: req.file ? req.file.filename : null,
+        information: req.body.information,
+      };
 
-    const artist = new Artist(artistData);
-    await artist.save();
+      const artist = new Artist(artistData);
+      await artist.save();
 
-    return res.send(artist);
-  } catch (e) {
-    if (e instanceof mongoose.Error.ValidationError) {
-      return res.status(422).send(e);
+      return res.send(artist);
+    } catch (e) {
+      if (e instanceof mongoose.Error.ValidationError) {
+        return res.status(422).send(e);
+      }
+
+      next(e);
     }
-
-    next(e);
-  }
-});
+  },
+);
 
 artistsRouter.get('/', async (_req, res, next) => {
   try {

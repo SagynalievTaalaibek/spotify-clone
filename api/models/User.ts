@@ -1,7 +1,7 @@
 import { Schema, model, HydratedDocument } from 'mongoose';
-import bcrypt from "bcrypt";
-import {randomUUID} from 'crypto';
-import {UserFields, UserMethods, UserModel} from '../types';
+import bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
+import { UserFields, UserMethods, UserModel } from '../types';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -33,8 +33,8 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
   token: {
     type: String,
     required: true,
-  }
-})
+  },
+});
 
 UserSchema.methods.checkPassword = function (password: string) {
   return bcrypt.compare(password, this.password);
@@ -57,7 +57,7 @@ UserSchema.set('toJSON', {
   transform: (_doc, ret) => {
     delete ret.password;
     return ret;
-  }
+  },
 });
 
 const User = model<UserFields, UserModel>('User', UserSchema);
