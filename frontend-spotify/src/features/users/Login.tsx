@@ -40,7 +40,6 @@ const Login = () => {
 
     await dispatch(login(state)).unwrap();
     navigate('/');
-    console.log(state);
   };
 
   return (

@@ -7,6 +7,10 @@ const ArtistSchema = new mongoose.Schema({
   },
   photo: String,
   information: String,
+  isPublished: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Artist = mongoose.model('Artist', ArtistSchema);
