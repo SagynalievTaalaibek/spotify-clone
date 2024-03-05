@@ -1,6 +1,7 @@
 import express from 'express';
-import TrackHistory from '../models/TrackHistory';
 import mongoose from 'mongoose';
+
+import TrackHistory from '../models/TrackHistory';
 import auth, { RequestWithUser } from '../middleware/auth';
 
 const trackHistoriesRouter = express.Router();

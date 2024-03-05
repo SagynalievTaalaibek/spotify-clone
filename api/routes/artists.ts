@@ -1,13 +1,16 @@
 import express from 'express';
+import mongoose from 'mongoose';
+
+import auth from '../middleware/auth';
 import { imagesUpload } from '../multer';
 import Artist from '../models/Artist';
-import mongoose from 'mongoose';
 import { ArtistMutation } from '../types';
 
 const artistsRouter = express.Router();
 
 artistsRouter.post(
   '/',
+  auth,
   imagesUpload.single('photo'),
   async (req, res, next) => {
     try {

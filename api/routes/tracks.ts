@@ -1,12 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
+
+import auth from '../middleware/auth';
 import Track from '../models/Track';
 import Album from '../models/Album';
 import { AlbumInterface, TrackMutation } from '../types';
 
 const tracksRouter = express.Router();
 
-tracksRouter.post('/', async (req, res, next) => {
+tracksRouter.post('/', auth, async (req, res, next) => {
   try {
     const trackData: TrackMutation = {
       name: req.body.name,
