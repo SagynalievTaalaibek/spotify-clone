@@ -5,7 +5,7 @@ import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Artist from '../models/Artist';
-import { ArtistMutation } from '../types';
+import { ArtistI, ArtistMutation } from '../types';
 
 const artistsRouter = express.Router();
 
@@ -43,6 +43,34 @@ artistsRouter.get('/', async (_req, res, next) => {
     next(e);
   }
 });
+
+artistsRouter.patch(
+  '/:id/togglePublished',
+  auth,
+  permit('admin'),
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const artist: ArtistI | null = await Artist.findById(id);
+
+      if (!artist) {
+        return res.status(404).send({ error: 'Not found!' });
+      }
+
+      const isPublished = artist.isPublished;
+
+      const updatedArtist = await Artist.updateOne(
+        { _id: id },
+        { isPublished: !isPublished },
+      );
+
+      res.send(updatedArtist);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 artistsRouter.delete(
   '/:id',

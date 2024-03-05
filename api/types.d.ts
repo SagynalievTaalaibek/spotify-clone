@@ -7,12 +7,13 @@ export interface AlbumMutation {
   image: string | null;
 }
 
-export interface AlbumInterface {
+export interface AlbumI {
   _id: string;
   name: string;
   artist: string;
   yearOfIssue: string;
   image: string | null;
+  isPublished: boolean;
 }
 
 export interface ArtistMutation {
@@ -21,11 +22,28 @@ export interface ArtistMutation {
   information: string;
 }
 
+export interface ArtistI {
+  _id: string;
+  name: string;
+  photo: string | null;
+  information: string;
+  isPublished: false;
+}
+
 export interface TrackMutation {
   name: string;
   album: string;
   duration: string;
   albumTrackNumber: string;
+}
+
+export interface TrackI {
+  _id: string;
+  name: string;
+  album: string;
+  duration: string;
+  albumTrackNumber: string;
+  isPublished: boolean;
 }
 
 export interface UserFields {

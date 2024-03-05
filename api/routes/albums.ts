@@ -5,7 +5,7 @@ import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Album from '../models/Album';
-import { AlbumMutation } from '../types';
+import { AlbumI, AlbumMutation } from '../types';
 
 const albumsRouter = express.Router();
 
@@ -78,6 +78,34 @@ albumsRouter.get('/:id', async (req, res, next) => {
     next(e);
   }
 });
+
+albumsRouter.patch(
+  '/:id/togglePublished',
+  auth,
+  permit('admin'),
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const album: AlbumI | null = await Album.findById(id);
+
+      if (!album) {
+        return res.status(404).send({ error: 'Not found!' });
+      }
+
+      const isPublished = album.isPublished;
+
+      const updatedAlbum = await Album.updateOne(
+        { _id: id },
+        { isPublished: !isPublished },
+      );
+
+      res.send(updatedAlbum);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 albumsRouter.delete(
   '/:id',
