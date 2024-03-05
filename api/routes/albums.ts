@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose, { Types } from 'mongoose';
 
-import auth from '../middleware/auth';
+import auth, { RequestWithUser } from '../middleware/auth';
+import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Album from '../models/Album';
 import { AlbumMutation } from '../types';
@@ -77,5 +78,27 @@ albumsRouter.get('/:id', async (req, res, next) => {
     next(e);
   }
 });
+
+albumsRouter.delete(
+  '/:id',
+  auth,
+  permit('admin'),
+  async (req: RequestWithUser, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const album = await Album.findById(id);
+
+      if (!album) {
+        return res.status(404).send({ error: 'Not found!' });
+      }
+
+      await Album.deleteOne({ _id: id });
+      return res.send({ message: 'Album deleted!' });
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 export default albumsRouter;

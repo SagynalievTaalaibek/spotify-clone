@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 
-import auth from '../middleware/auth';
+import auth, { RequestWithUser } from '../middleware/auth';
+import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Artist from '../models/Artist';
 import { ArtistMutation } from '../types';
@@ -43,4 +44,25 @@ artistsRouter.get('/', async (_req, res, next) => {
   }
 });
 
+artistsRouter.delete(
+  '/:id',
+  auth,
+  permit('admin'),
+  async (req: RequestWithUser, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const artist = await Artist.findById(id);
+
+      if (!artist) {
+        return res.status(404).send({ error: 'Not found!' });
+      }
+
+      await Artist.deleteOne({ _id: id });
+      return res.send({ message: 'Artist deleted!' });
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 export default artistsRouter;

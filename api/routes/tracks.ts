@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 
-import auth from '../middleware/auth';
+import auth, { RequestWithUser } from '../middleware/auth';
 import Track from '../models/Track';
 import Album from '../models/Album';
 import { AlbumInterface, TrackMutation } from '../types';
+import permit from '../middleware/permit';
 
 const tracksRouter = express.Router();
 
@@ -72,5 +73,27 @@ tracksRouter.get('/', async (req, res, next) => {
     next(e);
   }
 });
+
+tracksRouter.delete(
+  '/:id',
+  auth,
+  permit('admin'),
+  async (req: RequestWithUser, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const track = await Track.findById(id);
+
+      if (!track) {
+        return res.status(404).send({ error: 'Not found!' });
+      }
+
+      await Track.deleteOne({ _id: id });
+      return res.send({ message: 'Track deleted!' });
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 export default tracksRouter;
