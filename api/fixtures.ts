@@ -20,15 +20,27 @@ const run = async () => {
   await mongoose.connect(config.mongoose.db);
   const db = mongoose.connection;
 
-  const collections = ['artists', 'albums', 'tracks', 'users'];
+  const collections = [
+    'artists',
+    'albums',
+    'tracks',
+    'users',
+    'trackhistories',
+  ];
 
   for (const collectionsName of collections) {
     await dropCollection(db, collectionsName);
   }
 
-  await User.create(
+  const users = await User.create(
     {
       username: 'user',
+      password: 'football',
+      token: crypto.randomUUID(),
+      role: 'user',
+    },
+    {
+      username: 'taalaibek',
       password: 'football',
       token: crypto.randomUUID(),
       role: 'user',
@@ -47,18 +59,21 @@ const run = async () => {
       photo: 'fixtures/mirbek.jpg',
       information: 'KG Singer',
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Eminem',
       photo: 'fixtures/eminem.jpg',
       information: 'USA Singer',
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: '50Cent',
       photo: 'fixtures/50cent.jpeg',
       information: 'USA Singer',
       isPublished: false,
+      user: users[1]._id,
     },
   ]);
 
@@ -69,6 +84,7 @@ const run = async () => {
       yearOfIssue: 2010,
       image: 'fixtures/mirbek_album.jpg',
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Mirbek Album 2',
@@ -76,6 +92,7 @@ const run = async () => {
       yearOfIssue: 2015,
       image: 'fixtures/mirbek_album.jpg',
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Eminem Album 1',
@@ -83,6 +100,7 @@ const run = async () => {
       yearOfIssue: 2002,
       image: 'fixtures/eminem_albums.jpg',
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Eminem Album 2',
@@ -90,6 +108,7 @@ const run = async () => {
       yearOfIssue: 2010,
       image: 'fixtures/eminem_albums.jpg',
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Get Rich or Die Tryin',
@@ -97,6 +116,7 @@ const run = async () => {
       yearOfIssue: 2002,
       image: 'fixtures/50CentAlbum.jpeg',
       isPublished: false,
+      user: users[1]._id,
     },
   ]);
 
@@ -107,6 +127,7 @@ const run = async () => {
       duration: '1:15',
       albumTrackNumber: 1,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Жалынам A1',
@@ -114,6 +135,7 @@ const run = async () => {
       duration: '1:30',
       albumTrackNumber: 2,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Моя любимая A1',
@@ -121,6 +143,7 @@ const run = async () => {
       duration: '1:10',
       albumTrackNumber: 3,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Сени менен A1',
@@ -128,6 +151,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 4,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Mirbek songs A1',
@@ -135,6 +159,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 5,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Барам сага A2',
@@ -142,6 +167,7 @@ const run = async () => {
       duration: '1:15',
       albumTrackNumber: 1,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Кечки бишкек A2',
@@ -149,6 +175,7 @@ const run = async () => {
       duration: '1:30',
       albumTrackNumber: 2,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'No name name A2',
@@ -156,6 +183,7 @@ const run = async () => {
       duration: '1:10',
       albumTrackNumber: 3,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Сурдотпочу A2',
@@ -163,6 +191,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 4,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Mirbek songs A2',
@@ -170,6 +199,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 5,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Mockingbird A1',
@@ -177,6 +207,7 @@ const run = async () => {
       duration: '1:15',
       albumTrackNumber: 1,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Lose Yourself A1',
@@ -184,6 +215,7 @@ const run = async () => {
       duration: '1:30',
       albumTrackNumber: 2,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Godzilla A1',
@@ -191,6 +223,7 @@ const run = async () => {
       duration: '1:10',
       albumTrackNumber: 3,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Lose the way Lie A1',
@@ -198,6 +231,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 4,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'The Real Slim Shade',
@@ -205,6 +239,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 5,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Without me A2',
@@ -212,6 +247,7 @@ const run = async () => {
       duration: '1:15',
       albumTrackNumber: 1,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Venom A2',
@@ -219,6 +255,7 @@ const run = async () => {
       duration: '1:30',
       albumTrackNumber: 2,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Till i collapse A2',
@@ -226,6 +263,7 @@ const run = async () => {
       duration: '1:10',
       albumTrackNumber: 3,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Rap God A2',
@@ -233,6 +271,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 4,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Superman A2',
@@ -240,6 +279,7 @@ const run = async () => {
       duration: '1:04',
       albumTrackNumber: 5,
       isPublished: true,
+      user: users[0]._id,
     },
     {
       name: 'Intro',
@@ -247,6 +287,7 @@ const run = async () => {
       duration: '1:06',
       albumTrackNumber: 1,
       isPublished: false,
+      user: users[1]._id,
     },
     {
       name: 'In Da Club',
@@ -254,6 +295,7 @@ const run = async () => {
       duration: '3:14',
       albumTrackNumber: 2,
       isPublished: false,
+      user: users[1]._id,
     },
     {
       name: "If i can't",
@@ -261,6 +303,7 @@ const run = async () => {
       duration: '3:17',
       albumTrackNumber: 3,
       isPublished: false,
+      user: users[1]._id,
     },
   ]);
 

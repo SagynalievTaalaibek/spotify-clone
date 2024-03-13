@@ -1,5 +1,6 @@
 import { Schema, Types, model } from 'mongoose';
 import Artist from './Artist';
+import User from './User';
 
 const AlbumSchema = new Schema({
   name: {
@@ -26,6 +27,18 @@ const AlbumSchema = new Schema({
   isPublished: {
     type: Boolean,
     default: false,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    validate: {
+      validator: async (id: Types.ObjectId) => {
+        const user = await User.findById(id);
+        return Boolean(user);
+      },
+      message: 'User not found!',
+    },
   },
 });
 

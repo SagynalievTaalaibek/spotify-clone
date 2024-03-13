@@ -1,44 +1,27 @@
-import { Model } from 'mongoose';
-
-export interface AlbumMutation {
-  name: string;
-  artist: string;
-  yearOfIssue: string;
-  image: string | null;
-}
+import { Model, Types } from 'mongoose';
 
 export interface AlbumI {
   _id: string;
   name: string;
   artist: string;
+  user: string;
   yearOfIssue: string;
   image: string | null;
   isPublished: boolean;
 }
 
-export interface ArtistMutation {
-  name: string;
-  photo: string | null;
-  information: string;
-}
-
 export interface ArtistI {
   _id: string;
+  user: string;
   name: string;
   photo: string | null;
   information: string;
   isPublished: false;
 }
 
-export interface TrackMutation {
-  name: string;
-  album: string;
-  duration: string;
-  albumTrackNumber: string;
-}
-
 export interface TrackI {
   _id: string;
+  user: Types.ObjectId;
   name: string;
   album: string;
   duration: string;
@@ -50,6 +33,11 @@ export interface UserFields {
   username: string;
   password: string;
   token: string;
+  role: string;
+}
+
+export interface UserCheck {
+  _id: Types.ObjectId;
   role: string;
 }
 

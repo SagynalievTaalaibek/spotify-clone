@@ -5,7 +5,7 @@ import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Album from '../models/Album';
-import { AlbumI, AlbumMutation } from '../types';
+import { AlbumI, UserCheck } from '../types';
 
 const albumsRouter = express.Router();
 
@@ -13,16 +13,15 @@ albumsRouter.post(
   '/',
   auth,
   imagesUpload.single('image'),
-  async (req, res, next) => {
+  async (req: RequestWithUser, res, next) => {
     try {
-      const albumData: AlbumMutation = {
+      const album = new Album({
         name: req.body.name,
         artist: req.body.artist,
         yearOfIssue: req.body.yearOfIssue,
         image: req.file ? req.file.filename : null,
-      };
-
-      const album = new Album(albumData);
+        user: req.user?._id,
+      });
       await album.save();
 
       return res.send(album);
@@ -107,22 +106,42 @@ albumsRouter.patch(
   },
 );
 
+const deleteCheck = (user: UserCheck, album: AlbumI): boolean => {
+  let _id: Types.ObjectId;
+  try {
+    _id = new Types.ObjectId(user._id);
+  } catch {
+    return false;
+  }
+
+  if (user.role === 'admin') {
+    return true;
+  }
+
+  return user.role === 'user' && !album.isPublished && _id.equals(album.user);
+};
+
 albumsRouter.delete(
   '/:id',
   auth,
-  permit('admin'),
+  permit('admin', 'user'),
   async (req: RequestWithUser, res, next) => {
     try {
       const id = req.params.id;
+      const user = req.user;
 
-      const album = await Album.findById(id);
+      const album: AlbumI | null = await Album.findById(id);
 
       if (!album) {
         return res.status(404).send({ error: 'Not found!' });
       }
 
-      await Album.deleteOne({ _id: id });
-      return res.send({ message: 'Album deleted!' });
+      if (user && deleteCheck({ _id: user.id, role: user.role }, album)) {
+        await Album.deleteOne({ _id: id });
+        return res.send({ message: 'Album deleted!' });
+      }
+
+      return res.status(403).send({ error: 'Forbidden' });
     } catch (e) {
       next(e);
     }

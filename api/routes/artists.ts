@@ -1,11 +1,11 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Artist from '../models/Artist';
-import { ArtistI, ArtistMutation } from '../types';
+import { ArtistI, UserCheck } from '../types';
 
 const artistsRouter = express.Router();
 
@@ -13,15 +13,14 @@ artistsRouter.post(
   '/',
   auth,
   imagesUpload.single('photo'),
-  async (req, res, next) => {
+  async (req: RequestWithUser, res, next) => {
     try {
-      const artistData: ArtistMutation = {
+      const artist = new Artist({
         name: req.body.name,
         photo: req.file ? req.file.filename : null,
         information: req.body.information,
-      };
-
-      const artist = new Artist(artistData);
+        user: req.user?._id,
+      });
       await artist.save();
 
       return res.send(artist);
@@ -72,22 +71,42 @@ artistsRouter.patch(
   },
 );
 
+const deleteCheck = (user: UserCheck, artist: ArtistI): boolean => {
+  let _id: Types.ObjectId;
+  try {
+    _id = new Types.ObjectId(user._id);
+  } catch {
+    return false;
+  }
+
+  if (user.role === 'admin') {
+    return true;
+  }
+
+  return user.role === 'user' && !artist.isPublished && _id.equals(artist.user);
+};
+
 artistsRouter.delete(
   '/:id',
   auth,
-  permit('admin'),
+  permit('admin', 'user'),
   async (req: RequestWithUser, res, next) => {
     try {
       const id = req.params.id;
+      const user = req.user;
 
-      const artist = await Artist.findById(id);
+      const artist: ArtistI | null = await Artist.findById(id);
 
       if (!artist) {
         return res.status(404).send({ error: 'Not found!' });
       }
 
-      await Artist.deleteOne({ _id: id });
-      return res.send({ message: 'Artist deleted!' });
+      if (user && deleteCheck({ _id: user.id, role: user.role }, artist)) {
+        await Artist.deleteOne({ _id: id });
+        return res.send({ message: 'Artist deleted!' });
+      }
+
+      return res.status(403).send({ error: 'Forbidden' });
     } catch (e) {
       next(e);
     }

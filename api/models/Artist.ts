@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
+import User from './User';
 
 const ArtistSchema = new mongoose.Schema({
   name: {
@@ -6,10 +7,25 @@ const ArtistSchema = new mongoose.Schema({
     required: true,
   },
   photo: String,
-  information: String,
+  information: {
+    type: String,
+    default: null,
+  },
   isPublished: {
     type: Boolean,
     default: false,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    validate: {
+      validator: async (id: Types.ObjectId) => {
+        const user = await User.findById(id);
+        return Boolean(user);
+      },
+      message: 'User not found!',
+    },
   },
 });
 
