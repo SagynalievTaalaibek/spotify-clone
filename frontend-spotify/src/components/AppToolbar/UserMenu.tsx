@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { logout } from '../../features/users/usersThunks';
 import {
   Button,
   Grid,
@@ -8,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { UserI } from '../../types';
-import { NavLink } from 'react-router-dom';
 
 interface Props {
   user: UserI;
@@ -23,6 +25,7 @@ const Link = styled(NavLink)({
 });
 
 const UserMenu: React.FC<Props> = ({ user }) => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -30,6 +33,10 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    dispatch(logout());
   };
 
   return (
@@ -56,7 +63,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
       >
         <MenuItem>Profile</MenuItem>
         <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
       </Menu>
     </>
   );

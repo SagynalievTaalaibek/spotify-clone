@@ -12,9 +12,7 @@ const App = () => {
   return (
     <>
       <CssBaseline />
-      <header>
-        <AppToolbar />
-      </header>
+      <AppToolbar />
       <main>
         <Container maxWidth="xl">
           <Routes>
