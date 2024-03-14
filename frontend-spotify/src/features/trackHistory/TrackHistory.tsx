@@ -15,14 +15,11 @@ import {
   selectTrackHistoryData,
 } from './trackHistorySlice';
 import TrackHistoryTable from './components/TrackHistoryTable';
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { fetchTrackHistory } from './trackHistoryThunks';
 
 const TrackHistory = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   const user = useAppSelector(selectUser);
   const trackHistoryData = useAppSelector(selectTrackHistoryData);
   const trackHistoryDataLoading = useAppSelector(
@@ -32,10 +29,8 @@ const TrackHistory = () => {
   useEffect(() => {
     if (user) {
       dispatch(fetchTrackHistory(user.token));
-    } else {
-      navigate('/login');
     }
-  }, [dispatch, user, navigate]);
+  }, [dispatch, user]);
 
   return (
     <>
