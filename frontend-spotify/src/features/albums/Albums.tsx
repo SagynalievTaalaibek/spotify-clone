@@ -2,10 +2,11 @@ import { CircularProgress, Grid, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { deleteAlbum, fetchAlbumsByArtist } from './albumThunks';
+import { deleteAlbum, fetchAlbumsByArtist, publishAlbum } from './albumThunks';
 import {
   selectAlbumDeleteLoading,
   selectAlbumFetchLoading,
+  selectAlbumPublishLoading,
   selectAlbumsByArtist,
 } from './albumSlice';
 import AlbumCard from './components/AlbumCard';
@@ -15,6 +16,7 @@ const Albums = () => {
   const albumsData = useAppSelector(selectAlbumsByArtist);
   const fetchAlbumsLoading = useAppSelector(selectAlbumFetchLoading);
   const deleteLoading = useAppSelector(selectAlbumDeleteLoading);
+  const publishLoading = useAppSelector(selectAlbumPublishLoading);
 
   const { id } = useParams() as { id: string };
 
@@ -24,6 +26,11 @@ const Albums = () => {
 
   const onDeleteAlbum = async (albumId: string) => {
     await dispatch(deleteAlbum(albumId));
+    dispatch(fetchAlbumsByArtist(id));
+  };
+
+  const onPublishAlbum = async (albumId: string) => {
+    await dispatch(publishAlbum(albumId));
     dispatch(fetchAlbumsByArtist(id));
   };
 
@@ -49,7 +56,9 @@ const Albums = () => {
               isPublished={item.isPublished}
               userId={item.user}
               deleteLoading={deleteLoading}
+              publishLoading={publishLoading}
               onDelete={onDeleteAlbum}
+              onPublish={onPublishAlbum}
             />
           ))
         )}

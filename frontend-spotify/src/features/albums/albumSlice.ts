@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { createAlbum, deleteAlbum, fetchAlbumsByArtist } from './albumThunks';
+import {
+  createAlbum,
+  deleteAlbum,
+  fetchAlbumsByArtist,
+  publishAlbum,
+} from './albumThunks';
 import { AlbumsI } from '../../types';
 
 interface AlbumState {
@@ -8,6 +13,7 @@ interface AlbumState {
   fetchLoading: boolean;
   createLoading: boolean;
   deleteLoading: boolean;
+  publishLoading: boolean;
 }
 
 const initialState: AlbumState = {
@@ -15,6 +21,7 @@ const initialState: AlbumState = {
   fetchLoading: false,
   createLoading: false,
   deleteLoading: false,
+  publishLoading: false,
 };
 
 export const albumSlice = createSlice({
@@ -54,6 +61,17 @@ export const albumSlice = createSlice({
       .addCase(deleteAlbum.rejected, (state) => {
         state.deleteLoading = false;
       });
+
+    builder
+      .addCase(publishAlbum.pending, (state) => {
+        state.publishLoading = true;
+      })
+      .addCase(publishAlbum.fulfilled, (state) => {
+        state.publishLoading = false;
+      })
+      .addCase(publishAlbum.rejected, (state) => {
+        state.publishLoading = false;
+      });
   },
 });
 
@@ -67,3 +85,5 @@ export const selectAlbumCreateLoading = (state: RootState) =>
   state.album.createLoading;
 export const selectAlbumDeleteLoading = (state: RootState) =>
   state.album.deleteLoading;
+export const selectAlbumPublishLoading = (state: RootState) =>
+  state.album.publishLoading;

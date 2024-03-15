@@ -23,6 +23,8 @@ interface Props {
   isPublished: boolean;
   userId: string;
   deleteLoading: boolean;
+  publishLoading: boolean;
+  onPublish: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
@@ -35,6 +37,8 @@ const TrackTable: React.FC<Props> = ({
   isPublished,
   userId,
   deleteLoading,
+  publishLoading,
+  onPublish,
   onDelete,
 }) => {
   const dispatch = useAppDispatch();
@@ -48,6 +52,10 @@ const TrackTable: React.FC<Props> = ({
 
   const onDeleteTrack = () => {
     onDelete(idTrack);
+  };
+
+  const onPublishTrack = () => {
+    onPublish(idTrack);
   };
 
   return (
@@ -94,7 +102,9 @@ const TrackTable: React.FC<Props> = ({
             {user && user.role === 'admin' && !isPublished && (
               <Button
                 variant="contained"
+                disabled={publishLoading}
                 sx={{ marginLeft: 'auto', marginTop: 'auto' }}
+                onClick={onPublishTrack}
               >
                 Published
               </Button>

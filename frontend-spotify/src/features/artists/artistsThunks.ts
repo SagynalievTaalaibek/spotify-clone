@@ -35,3 +35,11 @@ export const deleteArtist = createAsyncThunk<void, string>(
     dispatch(fetchArtists());
   },
 );
+
+export const publishArtist = createAsyncThunk<void, string>(
+  'artist/publish',
+  async (id, { dispatch }) => {
+    await axiosApi.patch(`/artists/${id}/togglePublished`);
+    dispatch(fetchArtists());
+  },
+);

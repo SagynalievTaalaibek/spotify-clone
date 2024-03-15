@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../users/usersSlice';
-import { deleteArtist } from '../artistsThunks';
+import { deleteArtist, publishArtist } from '../artistsThunks';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { DeleteOutlined } from '@mui/icons-material';
 import imageNotAvailable from '../../../assets/images/image_not_available.png';
@@ -25,6 +25,7 @@ interface Props {
   photo: string;
   isPublished: boolean;
   deleteLoading: boolean;
+  publishLoading: boolean;
 }
 
 const ImageCardMedia = styled(CardMedia)({
@@ -39,6 +40,7 @@ const ArtistCard: React.FC<Props> = ({
   isPublished,
   userId,
   deleteLoading,
+  publishLoading,
 }) => {
   let cardImage = imageNotAvailable;
   const dispatch = useAppDispatch();
@@ -50,6 +52,10 @@ const ArtistCard: React.FC<Props> = ({
 
   const onDeleteArtist = () => {
     dispatch(deleteArtist(id));
+  };
+
+  const onPublish = () => {
+    dispatch(publishArtist(id));
   };
 
   return (
@@ -88,6 +94,8 @@ const ArtistCard: React.FC<Props> = ({
             <Grid item container xs={12} sx={{ margin: 0 }}>
               <Button
                 variant="contained"
+                disabled={publishLoading}
+                onClick={onPublish}
                 sx={{ marginLeft: 'auto', marginTop: 'auto' }}
               >
                 Published

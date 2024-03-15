@@ -5,6 +5,7 @@ import {
   selectArtist,
   selectArtistDeleteLoading,
   selectArtistFetchLoading,
+  selectArtistPublishLoading,
 } from './artistsSlice';
 import ArtistCard from './components/ArtistCard';
 import { CircularProgress, Grid, Typography } from '@mui/material';
@@ -14,6 +15,7 @@ const Artists = () => {
   const artistsData = useAppSelector(selectArtist);
   const fetchArtistLoading = useAppSelector(selectArtistFetchLoading);
   const deleteLoading = useAppSelector(selectArtistDeleteLoading);
+  const publishLoading = useAppSelector(selectArtistPublishLoading);
 
   useEffect(() => {
     dispatch(fetchArtists());
@@ -40,6 +42,7 @@ const Artists = () => {
                 isPublished={item.isPublished}
                 userId={item.user}
                 deleteLoading={deleteLoading}
+                publishLoading={publishLoading}
               />
             ))
           )}

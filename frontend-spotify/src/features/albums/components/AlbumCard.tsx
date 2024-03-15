@@ -1,4 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAppSelector } from '../../../app/hooks';
+import { selectUser } from '../../users/usersSlice';
 import {
   Button,
   Card,
@@ -10,13 +13,10 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import imageNotAvailable from '../../../assets/images/image_not_available.png';
-import { apiURL } from '../../../constants';
-import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { DeleteOutlined } from '@mui/icons-material';
-import { useAppSelector } from '../../../app/hooks';
-import { selectUser } from '../../users/usersSlice';
+import { apiURL } from '../../../constants';
+import imageNotAvailable from '../../../assets/images/image_not_available.png';
 
 interface Props {
   id: string;
@@ -27,6 +27,8 @@ interface Props {
   isPublished: boolean;
   userId: string;
   deleteLoading: boolean;
+  publishLoading: boolean;
+  onPublish: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
@@ -44,6 +46,8 @@ const AlbumCard: React.FC<Props> = ({
   isPublished,
   userId,
   deleteLoading,
+  publishLoading,
+  onPublish,
   onDelete,
 }) => {
   const user = useAppSelector(selectUser);
@@ -55,6 +59,10 @@ const AlbumCard: React.FC<Props> = ({
 
   const onDeleteAlbum = () => {
     onDelete(id);
+  };
+
+  const onPublishAlbum = () => {
+    onPublish(id);
   };
 
   return (
@@ -83,7 +91,9 @@ const AlbumCard: React.FC<Props> = ({
             <Grid item xs={12} sx={{ margin: 0 }}>
               <Button
                 variant="contained"
+                disabled={publishLoading}
                 sx={{ marginLeft: 'auto', marginTop: 'auto' }}
+                onClick={onPublishAlbum}
               >
                 Published
               </Button>

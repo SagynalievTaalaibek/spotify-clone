@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { deleteTrack, fetchTracks } from './trackThunks';
+import { deleteTrack, fetchTracks, publishTrack } from './trackThunks';
 import {
   selectTrackDeleteLoading,
   selectTrackFetchLoading,
+  selectTrackPublishLoading,
   selectTracks,
 } from './trackSlice';
 import { selectCreateTrackHistoryError } from '../trackHistory/trackHistorySlice';
@@ -37,6 +38,7 @@ const Track = () => {
   const userData = useAppSelector(selectUser);
   const trackHistoryError = useAppSelector(selectCreateTrackHistoryError);
   const trackDeleteLoading = useAppSelector(selectTrackDeleteLoading);
+  const publishLoading = useAppSelector(selectTrackPublishLoading);
 
   useEffect(() => {
     dispatch(fetchTracks(id));
@@ -44,6 +46,11 @@ const Track = () => {
 
   const onDeleteTrack = async (trackId: string) => {
     await dispatch(deleteTrack(trackId));
+    dispatch(fetchTracks(id));
+  };
+
+  const onPublishTrack = async (trackId: string) => {
+    await dispatch(publishTrack(trackId));
     dispatch(fetchTracks(id));
   };
 
@@ -85,6 +92,8 @@ const Track = () => {
                   isPublished={track.isPublished}
                   userId={track.user}
                   deleteLoading={trackDeleteLoading}
+                  publishLoading={publishLoading}
+                  onPublish={onPublishTrack}
                   onDelete={onDeleteTrack}
                 />
               ))
