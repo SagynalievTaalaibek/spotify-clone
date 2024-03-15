@@ -1,6 +1,6 @@
 import NewArtist from './features/artists/NewArtist';
-import Track from './features/tracks/Track';
 import NewAlbum from './features/albums/NewAlbum';
+import NewTrack from './features/tracks/NewTrack';
 
 export const apiURL = 'http://localhost:8000';
 
@@ -21,6 +21,6 @@ export const routeItems = [
     id: 'add-track333',
     page: 'add track',
     path: '/add-track',
-    component: Track,
+    component: NewTrack,
   },
 ];

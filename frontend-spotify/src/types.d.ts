@@ -40,6 +40,13 @@ export interface TrackI {
   albumTrackNumber: string;
 }
 
+export interface TrackMutation {
+  name: string;
+  album: string;
+  duration: string;
+  albumTrackNumber: string;
+}
+
 export interface RegisterMutation {
   username: string;
   password: string;
