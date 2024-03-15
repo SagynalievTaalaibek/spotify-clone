@@ -1,5 +1,9 @@
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { createTrackHistory } from '../../trackHistory/trackHistoryThunks';
+import { selectCreateTrackHistoryLoading } from '../../trackHistory/trackHistorySlice';
 import {
+  Button,
   Grid,
   IconButton,
   TableCell,
@@ -7,10 +11,8 @@ import {
   Typography,
 } from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { DeleteOutlined } from '@mui/icons-material';
 import { UserI } from '../../../types';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { createTrackHistory } from '../../trackHistory/trackHistoryThunks';
-import { selectCreateTrackHistoryLoading } from '../../trackHistory/trackHistorySlice';
 
 interface Props {
   idTrack: string;
@@ -19,6 +21,9 @@ interface Props {
   duration: string;
   albumTrackNumber: string;
   isPublished: boolean;
+  userId: string;
+  deleteLoading: boolean;
+  onDelete: (id: string) => void;
 }
 
 const TrackTable: React.FC<Props> = ({
@@ -28,6 +33,9 @@ const TrackTable: React.FC<Props> = ({
   albumTrackNumber,
   duration,
   isPublished,
+  userId,
+  deleteLoading,
+  onDelete,
 }) => {
   const dispatch = useAppDispatch();
   const trackHistoryLoading = useAppSelector(selectCreateTrackHistoryLoading);
@@ -36,6 +44,10 @@ const TrackTable: React.FC<Props> = ({
     if (user) {
       await dispatch(createTrackHistory({ track: idTrack, token: user.token }));
     }
+  };
+
+  const onDeleteTrack = () => {
+    onDelete(idTrack);
   };
 
   return (
@@ -50,7 +62,7 @@ const TrackTable: React.FC<Props> = ({
             <Grid item>
               {!isPublished && (
                 <Typography component="p" sx={{ margin: 0, color: 'red' }}>
-                  Not published {isPublished}
+                  Not published
                 </Typography>
               )}
             </Grid>
@@ -59,8 +71,8 @@ const TrackTable: React.FC<Props> = ({
         <TableCell component="th" scope="row">
           {duration}
         </TableCell>
-        {user ? (
-          <TableCell component="th" scope="row">
+        {user && (
+          <TableCell component="th" scope="row" align="center">
             <IconButton
               color="primary"
               disabled={trackHistoryLoading}
@@ -68,9 +80,26 @@ const TrackTable: React.FC<Props> = ({
             >
               <PlayCircleIcon />
             </IconButton>
+            {(!isPublished && user._id === userId) || user?.role === 'admin' ? (
+              <IconButton
+                color="primary"
+                disabled={deleteLoading}
+                onClick={onDeleteTrack}
+              >
+                <DeleteOutlined />
+              </IconButton>
+            ) : (
+              ''
+            )}
+            {user && user.role === 'admin' && !isPublished && (
+              <Button
+                variant="contained"
+                sx={{ marginLeft: 'auto', marginTop: 'auto' }}
+              >
+                Published
+              </Button>
+            )}
           </TableCell>
-        ) : (
-          ''
         )}
       </TableRow>
     </>

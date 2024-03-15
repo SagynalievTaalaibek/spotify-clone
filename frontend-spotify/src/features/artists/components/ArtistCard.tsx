@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import imageNotAvailable from '../../../assets/images/image_not_available.png';
-import { apiURL } from '../../../constants';
 import {
   Button,
   Card,
@@ -12,11 +10,13 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { DeleteOutlined } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../users/usersSlice';
 import { deleteArtist } from '../artistsThunks';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { DeleteOutlined } from '@mui/icons-material';
+import imageNotAvailable from '../../../assets/images/image_not_available.png';
+import { apiURL } from '../../../constants';
 
 interface Props {
   id: string;
@@ -85,7 +85,7 @@ const ArtistCard: React.FC<Props> = ({
             </Grid>
           </Grid>
           {user && user.role === 'admin' && !isPublished && (
-            <Grid container xs={12} sx={{ margin: 0 }}>
+            <Grid item container xs={12} sx={{ margin: 0 }}>
               <Button
                 variant="contained"
                 sx={{ marginLeft: 'auto', marginTop: 'auto' }}

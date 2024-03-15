@@ -1,3 +1,15 @@
+import { useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { deleteTrack, fetchTracks } from './trackThunks';
+import {
+  selectTrackDeleteLoading,
+  selectTrackFetchLoading,
+  selectTracks,
+} from './trackSlice';
+import { selectCreateTrackHistoryError } from '../trackHistory/trackHistorySlice';
+import { selectUser } from '../users/usersSlice';
+import TrackTable from './components/TrackTable';
 import {
   Alert,
   CircularProgress,
@@ -10,14 +22,6 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectTrackFetchLoading, selectTracks } from './trackSlice';
-import TrackTable from './components/TrackTable';
-import { useEffect } from 'react';
-import { fetchTracks } from './trackThunks';
-import { useLocation, useParams } from 'react-router-dom';
-import { selectUser } from '../users/usersSlice';
-import { selectCreateTrackHistoryError } from '../trackHistory/trackHistorySlice';
 
 const Track = () => {
   const { id } = useParams() as { id: string };
@@ -32,10 +36,16 @@ const Track = () => {
   const trackFetchLoading = useAppSelector(selectTrackFetchLoading);
   const userData = useAppSelector(selectUser);
   const trackHistoryError = useAppSelector(selectCreateTrackHistoryError);
+  const trackDeleteLoading = useAppSelector(selectTrackDeleteLoading);
 
   useEffect(() => {
     dispatch(fetchTracks(id));
   }, [dispatch, id]);
+
+  const onDeleteTrack = async (trackId: string) => {
+    await dispatch(deleteTrack(trackId));
+    dispatch(fetchTracks(id));
+  };
 
   return (
     <>
@@ -53,7 +63,7 @@ const Track = () => {
               <TableCell align="left">Number</TableCell>
               <TableCell align="left">Name</TableCell>
               <TableCell align="left">Duration</TableCell>
-              {userData ? <TableCell align="left">Action</TableCell> : ''}
+              {userData ? <TableCell align="center">Action</TableCell> : ''}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -73,6 +83,9 @@ const Track = () => {
                   duration={track.duration}
                   albumTrackNumber={track.albumTrackNumber}
                   isPublished={track.isPublished}
+                  userId={track.user}
+                  deleteLoading={trackDeleteLoading}
+                  onDelete={onDeleteTrack}
                 />
               ))
             ) : (

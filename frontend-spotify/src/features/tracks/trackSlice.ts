@@ -1,18 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TrackI } from '../../types';
 import { RootState } from '../../app/store';
-import { createTrack, fetchTracks } from './trackThunks';
+import { createTrack, deleteTrack, fetchTracks } from './trackThunks';
+import { TrackI } from '../../types';
 
 interface TrackState {
   tracks: TrackI[];
   fetchTrackLoading: boolean;
   createLoading: boolean;
+  deleteLoading: boolean;
 }
 
 const initialState: TrackState = {
   tracks: [],
   fetchTrackLoading: false,
   createLoading: false,
+  deleteLoading: false,
 };
 
 export const trackSlice = createSlice({
@@ -42,6 +44,17 @@ export const trackSlice = createSlice({
       .addCase(createTrack.rejected, (state) => {
         state.createLoading = false;
       });
+
+    builder
+      .addCase(deleteTrack.pending, (state) => {
+        state.deleteLoading = true;
+      })
+      .addCase(deleteTrack.fulfilled, (state) => {
+        state.deleteLoading = false;
+      })
+      .addCase(deleteTrack.rejected, (state) => {
+        state.deleteLoading = false;
+      });
   },
 });
 
@@ -52,3 +65,5 @@ export const selectTrackFetchLoading = (state: RootState) =>
 
 export const selectTrackCreateLoading = (state: RootState) =>
   state.track.createLoading;
+export const selectTrackDeleteLoading = (state: RootState) =>
+  state.track.deleteLoading;
