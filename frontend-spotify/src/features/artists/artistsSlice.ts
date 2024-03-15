@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { ArtistsI } from '../../types';
 import { createArtist, fetchArtists } from './artistsThunks';
+import { ArtistsI } from '../../types';
 
 interface ArtistsState {
   artists: ArtistsI[];

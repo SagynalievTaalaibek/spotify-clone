@@ -1,10 +1,10 @@
-import { Typography } from '@mui/material';
-import ArtistForm from './components/ArtistForm';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectArtistCreateLoading } from './artistsSlice';
-import { ArtistMutation } from '../../types';
-import { createArtist } from './artistsThunks';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { createArtist } from './artistsThunks';
+import { selectArtistCreateLoading } from './artistsSlice';
+import ArtistForm from './components/ArtistForm';
+import { Typography } from '@mui/material';
+import { ArtistMutation } from '../../types';
 
 const NewArtist = () => {
   const createLoading = useAppSelector(selectArtistCreateLoading);

@@ -32,7 +32,7 @@ const ArtistCard: React.FC<Props> = ({ id, name, photo }) => {
   }
 
   return (
-    <Grid item sm md={6} lg={4}>
+    <Grid item xs sm={12} md={6} lg={4}>
       <Card sx={{ height: '100%' }}>
         <ImageCardMedia image={cardImage} title={name} />
         <CardContent>
