@@ -21,7 +21,7 @@ const Albums = () => {
     <>
       <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
         {albumsData.length > 0
-          ? `Name ${albumsData[0]?.artist.name}`
+          ? `Name: ${albumsData[0]?.artist.name}`
           : 'No albums'}
       </Typography>
       <Grid container spacing={2}>

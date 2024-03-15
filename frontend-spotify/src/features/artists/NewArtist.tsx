@@ -1,8 +1,20 @@
 import { Typography } from '@mui/material';
 import ArtistForm from './components/ArtistForm';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectArtistCreateLoading } from './artistsSlice';
+import { ArtistMutation } from '../../types';
+import { createArtist } from './artistsThunks';
+import { useNavigate } from 'react-router-dom';
 
 const NewArtist = () => {
-  const createLoading = false;
+  const createLoading = useAppSelector(selectArtistCreateLoading);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const onArtistCreate = async (artist: ArtistMutation) => {
+    await dispatch(createArtist(artist));
+    navigate('/');
+  };
 
   return (
     <>
@@ -13,7 +25,7 @@ const NewArtist = () => {
       >
         Add new artist
       </Typography>
-      <ArtistForm isLoading={createLoading} />
+      <ArtistForm isLoading={createLoading} onArtistSubmit={onArtistCreate} />
     </>
   );
 };

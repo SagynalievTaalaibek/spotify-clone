@@ -7,6 +7,7 @@ import { ArtistMutation } from '../../../types';
 
 interface Props {
   isLoading: boolean;
+  onArtistSubmit: (artist: ArtistMutation) => void;
 }
 
 const initialState: ArtistMutation = {
@@ -14,13 +15,13 @@ const initialState: ArtistMutation = {
   photo: null,
   information: '',
 };
-const ArtistForm: React.FC<Props> = ({ isLoading }) => {
+const ArtistForm: React.FC<Props> = ({ isLoading, onArtistSubmit }) => {
   const [state, setState] = useState<ArtistMutation>(initialState);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(state);
+    onArtistSubmit(state);
     setState(initialState);
   };
 
