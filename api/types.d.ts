@@ -1,15 +1,5 @@
 import { Model, Types } from 'mongoose';
 
-export interface AlbumI {
-  _id: string;
-  name: string;
-  artist: string;
-  user: string;
-  yearOfIssue: string;
-  image: string | null;
-  isPublished: boolean;
-}
-
 export interface ArtistI {
   _id: string;
   user: string;
@@ -17,6 +7,16 @@ export interface ArtistI {
   photo: string | null;
   information: string;
   isPublished: false;
+}
+
+export interface AlbumI {
+  _id: string;
+  name: string;
+  artist: ArtistI;
+  user: string;
+  yearOfIssue: string;
+  image: string | null;
+  isPublished: boolean;
 }
 
 export interface TrackI {

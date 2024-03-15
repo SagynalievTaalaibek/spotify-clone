@@ -1,7 +1,11 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useEffect } from 'react';
 import { fetchArtists } from './artistsThunks';
-import { selectArtist, selectArtistFetchLoading } from './artistsSlice';
+import {
+  selectArtist,
+  selectArtistDeleteLoading,
+  selectArtistFetchLoading,
+} from './artistsSlice';
 import ArtistCard from './components/ArtistCard';
 import { CircularProgress, Grid, Typography } from '@mui/material';
 
@@ -9,6 +13,7 @@ const Artists = () => {
   const dispatch = useAppDispatch();
   const artistsData = useAppSelector(selectArtist);
   const fetchArtistLoading = useAppSelector(selectArtistFetchLoading);
+  const deleteLoading = useAppSelector(selectArtistDeleteLoading);
 
   useEffect(() => {
     dispatch(fetchArtists());
@@ -32,6 +37,9 @@ const Artists = () => {
                 id={item._id}
                 name={item.name}
                 photo={item.photo}
+                isPublished={item.isPublished}
+                userId={item.user}
+                deleteLoading={deleteLoading}
               />
             ))
           )}

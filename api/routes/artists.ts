@@ -6,6 +6,7 @@ import permit from '../middleware/permit';
 import { imagesUpload } from '../multer';
 import Artist from '../models/Artist';
 import { ArtistI, UserCheck } from '../types';
+import userCheck from '../middleware/userCheck';
 
 const artistsRouter = express.Router();
 
@@ -34,10 +35,29 @@ artistsRouter.post(
   },
 );
 
-artistsRouter.get('/', async (_req, res, next) => {
+artistsRouter.get('/', userCheck, async (req: RequestWithUser, res, next) => {
   try {
+    const user = req.user;
     const artists = await Artist.find();
-    return res.send(artists);
+    const resultsPublished: ArtistI[] = await Artist.find({
+      isPublished: true,
+    });
+    const resultsNotPublished: ArtistI[] = await Artist.find({
+      isPublished: false,
+    });
+
+    if (user) {
+      if (user.role === 'admin') {
+        return res.send(artists);
+      } else if (user.role === 'user') {
+        const filterByUser = resultsNotPublished.filter((item) =>
+          user._id.equals(item.user),
+        );
+        return res.send([...filterByUser, ...resultsPublished]);
+      }
+    }
+
+    return res.send(resultsPublished);
   } catch (e) {
     next(e);
   }

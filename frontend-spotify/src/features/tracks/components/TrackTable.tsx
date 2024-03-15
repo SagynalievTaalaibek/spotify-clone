@@ -1,5 +1,11 @@
 import React from 'react';
-import { IconButton, TableCell, TableRow } from '@mui/material';
+import {
+  Grid,
+  IconButton,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { UserI } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -12,6 +18,7 @@ interface Props {
   user: UserI | null;
   duration: string;
   albumTrackNumber: string;
+  isPublished: boolean;
 }
 
 const TrackTable: React.FC<Props> = ({
@@ -20,6 +27,7 @@ const TrackTable: React.FC<Props> = ({
   name,
   albumTrackNumber,
   duration,
+  isPublished,
 }) => {
   const dispatch = useAppDispatch();
   const trackHistoryLoading = useAppSelector(selectCreateTrackHistoryLoading);
@@ -37,7 +45,16 @@ const TrackTable: React.FC<Props> = ({
           {albumTrackNumber}
         </TableCell>
         <TableCell component="th" scope="row">
-          {name}
+          <Grid container spacing={2}>
+            <Grid item>{name}</Grid>
+            <Grid item>
+              {!isPublished && (
+                <Typography component="p" sx={{ margin: 0, color: 'red' }}>
+                  Not published {isPublished}
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
         </TableCell>
         <TableCell component="th" scope="row">
           {duration}

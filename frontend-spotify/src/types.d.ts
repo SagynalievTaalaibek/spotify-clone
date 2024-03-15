@@ -2,6 +2,8 @@ export interface ArtistsI {
   _id: string;
   name: string;
   photo: string;
+  user: string;
+  isPublished: boolean;
   information: string | null;
 }
 
@@ -15,6 +17,8 @@ export interface AlbumsI {
   _id: string;
   name: string;
   artist: ArtistsI;
+  user: string;
+  isPublished: boolean;
   yearOfIssue: number;
   image: string;
 }
@@ -38,6 +42,8 @@ export interface TrackI {
   };
   duration: string;
   albumTrackNumber: string;
+  user: string;
+  isPublished: boolean;
 }
 
 export interface TrackMutation {
@@ -56,6 +62,7 @@ export interface UserI {
   _id: string;
   username: string;
   token: string;
+  role: string;
 }
 
 export interface ValidationError {

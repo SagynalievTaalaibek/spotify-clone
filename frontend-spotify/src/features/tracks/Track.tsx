@@ -72,6 +72,7 @@ const Track = () => {
                   name={track.name}
                   duration={track.duration}
                   albumTrackNumber={track.albumTrackNumber}
+                  isPublished={track.isPublished}
                 />
               ))
             ) : (

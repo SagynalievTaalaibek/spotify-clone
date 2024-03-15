@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { logout } from '../../features/users/usersThunks';
 import {
@@ -28,6 +28,7 @@ const Link = styled(NavLink)({
 
 const UserMenu: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -37,8 +38,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
     setAnchorEl(null);
   };
 
-  const handleLogOut = () => {
-    dispatch(logout());
+  const handleLogOut = async () => {
+    await dispatch(logout());
+    navigate('/login');
   };
 
   return (

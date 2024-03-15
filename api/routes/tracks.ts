@@ -6,6 +6,7 @@ import Track from '../models/Track';
 import Album from '../models/Album';
 import permit from '../middleware/permit';
 import { AlbumI, TrackI, UserCheck } from '../types';
+import userCheck from '../middleware/userCheck';
 
 const tracksRouter = express.Router();
 
@@ -29,17 +30,46 @@ tracksRouter.post('/', auth, async (req: RequestWithUser, res, next) => {
   }
 });
 
-tracksRouter.get('/', async (req, res, next) => {
+tracksRouter.get('/', userCheck, async (req: RequestWithUser, res, next) => {
   try {
     const queryAlbum = req.query.album;
     const queryArtistId = req.query.artist;
+    const user = req.user;
 
     if (queryAlbum) {
       try {
-        const trackByAlbum = await Track.find({ album: queryAlbum })
+        const trackByAlbum = await Track.find({
+          album: queryAlbum,
+        })
           .populate('album')
           .sort({ albumTrackNumber: 1 });
-        return res.send(trackByAlbum);
+
+        const resultsPublished = await Track.find({
+          album: queryAlbum,
+          isPublished: true,
+        })
+          .populate('album')
+          .sort({ albumTrackNumber: 1 });
+
+        const resultsNotPublished = await Track.find({
+          album: queryAlbum,
+          isPublished: false,
+        })
+          .populate('album')
+          .sort({ albumTrackNumber: 1 });
+
+        if (user) {
+          if (user.role === 'admin') {
+            return res.send(trackByAlbum);
+          } else if (user.role === 'user') {
+            const filterByUser = resultsNotPublished.filter((item) =>
+              user._id.equals(item.user),
+            );
+            return res.send([...filterByUser, ...resultsPublished]);
+          }
+        }
+
+        return res.send(resultsPublished);
       } catch (e) {
         return res.status(404).send({ message: 'Wrong object id' });
       }
@@ -66,7 +96,7 @@ tracksRouter.get('/', async (req, res, next) => {
       }
     }
 
-    const tracks = await Track.find().populate('album');
+    const tracks = await Track.find({ isPublished: true }).populate('album');
     return res.send(tracks);
   } catch (e) {
     next(e);
