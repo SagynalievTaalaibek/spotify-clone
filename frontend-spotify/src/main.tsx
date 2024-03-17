@@ -1,23 +1,27 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 import App from './App';
 import theme from './theme';
-import { Provider } from 'react-redux';
 import { persistor, store } from './app/store';
 import { addInterceptors } from './axiosApi';
+import { GOOGLE_CLIENT_ID } from './constants';
 
 addInterceptors(store);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </BrowserRouter>
-    </PersistGate>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <PersistGate persistor={persistor}>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </BrowserRouter>
+      </PersistGate>
+    </GoogleOAuthProvider>
   </Provider>,
 );

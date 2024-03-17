@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectLoginError, selectLoginLoading } from './usersSlice';
+import { googleLogin, login } from './usersThunks';
 import {
   Alert,
   Avatar,
@@ -12,10 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectLoginError, selectLoginLoading } from './usersSlice';
 import { LoginMutation } from '../../types';
-import { login } from './usersThunks';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -42,6 +43,11 @@ const Login = () => {
     navigate('/');
   };
 
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -63,6 +69,18 @@ const Login = () => {
             {error.error}
           </Alert>
         )}
+        <Box sx={{ pt: 2 }}>
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              if (credentialResponse.credential) {
+                void googleLoginHandler(credentialResponse.credential);
+              }
+            }}
+            onError={() => {
+              console.log('Login failed!');
+            }}
+          />
+        </Box>
         <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
