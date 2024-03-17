@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { logout } from '../../features/users/usersThunks';
 import {
+  Avatar,
   Button,
   Grid,
   Menu,
@@ -11,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { UserI } from '../../types';
-import { routeItems } from '../../constants';
+import { apiURL, routeItems } from '../../constants';
 
 interface Props {
   user: UserI;
@@ -30,6 +31,14 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  let avatarImage = '';
+
+  if (user.avatar.includes('https://')) {
+    avatarImage = user.avatar;
+  } else {
+    avatarImage = apiURL + '/' + user.avatar;
+  }
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
   };
@@ -51,8 +60,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         </Typography>
       </Grid>
       <Button color="inherit" onClick={handleClick}>
-        Hello, {user.username}!
+        Hello, {user.displayName}!
       </Button>
+      <Avatar alt={user.displayName} src={avatarImage} />
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

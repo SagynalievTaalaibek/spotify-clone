@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectRegisterError, selectRegisterLoading } from './usersSlice';
 import { registerUser } from './usersThunks';
 import { RegisterMutation } from '../../types';
+import FileInput from '../../components/FileInput/FileInput';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -23,8 +24,10 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [state, setState] = useState<RegisterMutation>({
-    username: '',
+    email: '',
     password: '',
+    displayName: '',
+    avatar: null,
   });
 
   const getFieldError = (fieldName: string) => {
@@ -47,9 +50,20 @@ const Register = () => {
     e.preventDefault();
     try {
       await dispatch(registerUser(state)).unwrap();
+      console.log(state);
       navigate('/');
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files) {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
     }
   };
 
@@ -73,13 +87,13 @@ const Register = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Username"
-                name="username"
-                value={state.username}
+                label="E-mail"
+                name="email"
+                value={state.email}
                 onChange={inputChangeHandler}
-                autoComplete="new-username"
-                error={Boolean(getFieldError('username'))}
-                helperText={getFieldError('username')}
+                autoComplete="new-email"
+                error={Boolean(getFieldError('email'))}
+                helperText={getFieldError('email')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -92,6 +106,24 @@ const Register = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('password'))}
                 helperText={getFieldError('password')}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Full name"
+                name="displayName"
+                value={state.displayName}
+                onChange={inputChangeHandler}
+                autoComplete="new-displayName"
+                error={Boolean(getFieldError('displayName'))}
+                helperText={getFieldError('displayName')}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FileInput
+                label="Avatar"
+                name="avatar"
+                onChange={fileInputChangeHandler}
               />
             </Grid>
           </Grid>

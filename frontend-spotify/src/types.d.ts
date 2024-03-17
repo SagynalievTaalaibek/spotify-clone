@@ -54,13 +54,17 @@ export interface TrackMutation {
 }
 
 export interface RegisterMutation {
-  username: string;
+  email: string;
+  displayName: string;
+  avatar: File | null;
   password: string;
 }
 
 export interface UserI {
   _id: string;
-  username: string;
+  email: string;
+  displayName: string;
+  avatar: string;
   token: string;
   role: string;
 }
@@ -83,7 +87,7 @@ export interface RegisterResponse {
 }
 
 export interface LoginMutation {
-  username: string;
+  email: string;
   password: string;
 }
 

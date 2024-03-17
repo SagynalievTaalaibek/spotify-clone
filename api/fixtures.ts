@@ -35,18 +35,24 @@ const run = async () => {
   const users = await User.create(
     {
       email: 'user@spotify.local',
+      displayName: 'User',
+      avatar: 'fixtures/avatar1.webp',
       password: 'football',
       token: crypto.randomUUID(),
-      role: 'user',
+      role: 'user'
     },
     {
       email: 'taalaibek@spotify.local',
+      displayName: 'Taalaibek',
+      avatar: 'fixtures/avatar1.webp',
       password: 'football',
       token: crypto.randomUUID(),
       role: 'user',
     },
     {
       email: 'admin@spotify.local',
+      displayName: 'Batman',
+      avatar: 'fixtures/batman_avatar.webp',
       password: 'football',
       token: crypto.randomUUID(),
       role: 'admin',

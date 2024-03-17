@@ -24,7 +24,7 @@ const Login = () => {
   const error = useAppSelector(selectLoginError);
   const loginLoading = useAppSelector(selectLoginLoading);
   const [state, setState] = useState<LoginMutation>({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -85,10 +85,10 @@ const Login = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Username"
-                name="username"
-                autoComplete="current-username"
-                value={state.username}
+                label="E-mail"
+                name="email"
+                autoComplete="current-email"
+                value={state.email}
                 onChange={inputChangeHandler}
               />
             </Grid>

@@ -34,7 +34,8 @@ export interface UserFields {
   password: string;
   token: string;
   role: string;
-  displayName?: string;
+  displayName: string;
+  avatar: string | null;
   googleID?: string;
 }
 

@@ -3,15 +3,18 @@ import mongoose from 'mongoose';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User';
 import config from '../config';
+import { imagesUpload } from '../multer';
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
 
-usersRouter.post('/', async (req, res, next) => {
+usersRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
   try {
     const user = new User({
       email: req.body.email,
       password: req.body.password,
+      displayName: req.body.displayName,
+      avatar: req.file ? req.file.filename : null,
     });
 
     user.generateToken();
@@ -67,11 +70,12 @@ usersRouter.post('/google', async (req, res, next) => {
     }
 
     const email = payload['email'];
+    const avatar = payload['picture'];
     const id = payload['sub'];
     const displayName = payload['name'];
 
-    if (!email) {
-      return res.status(400).send({ error: 'Email is not present!' });
+    if (!email || !displayName) {
+      return res.status(400).send({ error: 'Email or Display name are not present!' });
     }
 
     let user = await User.findOne({ googleID: id });
@@ -82,6 +86,7 @@ usersRouter.post('/google', async (req, res, next) => {
         password: crypto.randomUUID(),
         googleID: id,
         displayName,
+        avatar,
       });
     }
 

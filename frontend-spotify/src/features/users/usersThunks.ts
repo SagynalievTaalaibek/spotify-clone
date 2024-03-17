@@ -16,7 +16,18 @@ export const registerUser = createAsyncThunk<
   { rejectValue: ValidationError }
 >('users/register', async (userData, { rejectWithValue }) => {
   try {
-    const response = await axiosApi.post('/users', userData);
+    const formData = new FormData();
+
+    const keys = Object.keys(userData) as (keyof RegisterMutation)[];
+    keys.forEach((key) => {
+      const value = userData[key];
+
+      if (value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    const response = await axiosApi.post('/users', formData);
     return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 422) {
