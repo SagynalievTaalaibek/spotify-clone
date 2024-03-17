@@ -34,19 +34,19 @@ const run = async () => {
 
   const users = await User.create(
     {
-      username: 'user',
+      email: 'user@spotify.local',
       password: 'football',
       token: crypto.randomUUID(),
       role: 'user',
     },
     {
-      username: 'taalaibek',
+      email: 'taalaibek@spotify.local',
       password: 'football',
       token: crypto.randomUUID(),
       role: 'user',
     },
     {
-      username: 'admin',
+      email: 'admin@spotify.local',
       password: 'football',
       token: crypto.randomUUID(),
       role: 'admin',
