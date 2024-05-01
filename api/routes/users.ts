@@ -65,6 +65,8 @@ usersRouter.post('/google', async (req, res, next) => {
 
     const payload = ticket.getPayload();
 
+    console.log(payload);
+
     if (!payload) {
       return res.status(400).send({ error: 'Google login error!' });
     }
@@ -73,6 +75,7 @@ usersRouter.post('/google', async (req, res, next) => {
     const avatar = payload['picture'];
     const id = payload['sub'];
     const displayName = payload['name'];
+    const token = payload['sub'];
 
     if (!email || !displayName) {
       return res.status(400).send({ error: 'Email or Display name are not present!' });
@@ -90,7 +93,7 @@ usersRouter.post('/google', async (req, res, next) => {
       });
     }
 
-    user.generateToken();
+    user.token = token;
     await user.save();
 
     return res.send({

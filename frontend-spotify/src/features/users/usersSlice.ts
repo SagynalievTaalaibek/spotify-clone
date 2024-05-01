@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { googleLogin, login, registerUser } from './usersThunks';
 import { GlobalError, UserI, ValidationError } from '../../types';
@@ -9,6 +9,7 @@ interface UsersState {
   registerError: ValidationError | null;
   loginLoading: boolean;
   loginError: GlobalError | null;
+  globalToken: string;
 }
 
 const initialState: UsersState = {
@@ -17,6 +18,7 @@ const initialState: UsersState = {
   registerError: null,
   loginLoading: false,
   loginError: null,
+  globalToken: '',
 };
 
 export const userSlice = createSlice({
@@ -26,6 +28,9 @@ export const userSlice = createSlice({
     unsetUser: (state) => {
       state.user = null;
     },
+    setGlobalToken: (state, action: PayloadAction<string>) => {
+      state.globalToken = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -73,7 +78,7 @@ export const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const { unsetUser } = userSlice.actions;
+export const { unsetUser, setGlobalToken } = userSlice.actions;
 export const selectUser = (state: RootState) => state.users.user;
 export const selectRegisterLoading = (state: RootState) =>
   state.users.registerLoading;
@@ -82,3 +87,5 @@ export const selectRegisterError = (state: RootState) =>
 export const selectLoginLoading = (state: RootState) =>
   state.users.loginLoading;
 export const selectLoginError = (state: RootState) => state.users.loginError;
+
+export const selectGlobalToken = (state: RootState) => state.users.globalToken;

@@ -12,7 +12,9 @@ import TrackHistory from './features/trackHistory/TrackHistory';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { Container, CssBaseline } from '@mui/material';
 import NotFound from './components/NotFound';
+import GoogleDriveUpload from './features/googleDriveUpload/GoogleDriveUpload';
 import { routeItems } from './constants';
+import FileTest from './features/fileTest/FileTest';
 
 const App = () => {
   const user = useAppSelector(selectUser);
@@ -48,6 +50,8 @@ const App = () => {
                 }
               />
             ))}
+            <Route path={'/test'} element={<GoogleDriveUpload/>} />
+            <Route path={'/fileUpload'} element={<FileTest/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>

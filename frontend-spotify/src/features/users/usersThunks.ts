@@ -66,6 +66,7 @@ export const googleLogin = createAsyncThunk<
   try {
     const response = await axiosApi.post('/users/google', { credential });
     return response.data;
+
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 422) {
       return rejectWithValue(e.response.data);

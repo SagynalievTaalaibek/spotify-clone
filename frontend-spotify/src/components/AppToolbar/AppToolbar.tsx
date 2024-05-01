@@ -17,7 +17,7 @@ const AppToolbar = () => {
   const user = useAppSelector(selectUser);
 
   return (
-    <AppBar position="sticky" sx={{ mb: 2, backgroundColor: '#1DB954' }}>
+    <AppBar position="sticky" sx={{ mb: 2}}>
       <Toolbar>
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography
@@ -25,7 +25,9 @@ const AppToolbar = () => {
             component="div"
             sx={{ flexGrow: 1, fontWeight: 'bold' }}
           >
-            <Link to="/">Spotify</Link>
+            <Link to="/" sx={{padding: '0 30px'}}>Spotify</Link>
+            <Link to="/test">Google Drive Upload</Link>
+            <Link to="/fileUpload" sx={{margin: "0 10px"}}>File Upload</Link>
           </Typography>
           {user ? <UserMenu user={user} /> : <AnonymousMenu />}
         </Grid>

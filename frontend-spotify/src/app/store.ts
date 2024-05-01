@@ -15,6 +15,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { trackHistoryReducer } from '../features/trackHistory/trackHistorySlice';
+import { fileReducer } from '../features/fileTest/fileSlice';
 
 const usersPersistConfig = {
   key: 'spotify:users',
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   track: trackReducer,
   users: persistReducer(usersPersistConfig, userReducer),
   trackHistory: trackHistoryReducer,
+  file: fileReducer,
 });
 
 export const store = configureStore({

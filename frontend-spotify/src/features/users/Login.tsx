@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectLoginError, selectLoginLoading } from './usersSlice';
+import { selectLoginError, selectLoginLoading, setGlobalToken } from './usersSlice';
 import { googleLogin, login } from './usersThunks';
 import {
   Alert,
@@ -45,6 +45,7 @@ const Login = () => {
 
   const googleLoginHandler = async (credential: string) => {
     await dispatch(googleLogin(credential)).unwrap();
+    dispatch(setGlobalToken(credential));
     navigate('/');
   };
 
